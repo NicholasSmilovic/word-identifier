@@ -78,13 +78,87 @@ function compareToEnglishWords(combinations, engWords) {
 
 //check if number is valid ----->future work use the star key and pound key to create sentences.
 function validNumber(nums){
-  for(var num in nums) {
+  for(var num of nums) {
     if (num === "0" || num === "1") {
       valid = false;
     }
   }
+  return valid;
 }
 
+function validOutput() {
+  rl.question("Is there a problem with the output? (yes/no): ", function(answer) {
+    if (answer === "yes") {
+      rl.question("Is your word not there? (yes/no): ", function (answer) {
+        if (answer === "yes") {
+          addWordToDatabase();
+        } else if (answer === "no") {
+          rl.question("Is you output repeated? (yes/no): ", function(answer) {
+            if (answer === yes) {
+              deleteRepeatedWord();
+            } else if (answer === "no") {
+              console.log("I don't know then. Sorry!!");
+              rl.close();
+            } else {
+              console.log("invalid input")
+              rl.close();
+            }
+          });
+        }
+      });
+    } else if (answer === "no") {
+      console.log("Perfect");
+      rl.close();
+    } else {
+      console.log("invalid input")
+      rl.close();
+    }
+  });
+}
+
+
+function addWordToDatabase() {
+  rl.question("Please input your word in lowercase: ", function (answer) {
+    var exist = checkForWord(answer);
+    if (exist < 0) {
+      console.log("Invalid word. Please don't try to add invalid words to database.");
+      } else if (exist === 0) {
+        wordsStr = wordsStr + "\n" + answer;
+        fs.writeFile(filePath, wordsStr, function(err) {
+          if (err) {
+            throw err;
+          }
+        });
+      } else {
+        console.log("We already have this word, but thank you.");
+      }
+    rl.close();
+  });
+}
+
+//validates word and checks database for word. returning the number of times the word occured
+function checkForWord(str) {
+  var count = 0;
+  for (var char of str) {
+    //console.log(char," to number is ", char.charCodeAt())
+    if(char.charCodeAt() < "a".charCodeAt() || char.charCodeAt() > "z".charCodeAt()) {
+      return -1;
+    }
+  }
+  for (var prop in engWords) {
+    for(var word of engWords[prop]) {
+      if (word === str) {
+      count++;
+      }
+    }
+  }
+  console.log(count)
+  return count;
+}
+
+function deleteRepeatedWord() {
+
+}
 //***************Start of function calls******************************//
 //.js file containing function for creating database of english words
 var words = require("./lib/word-stats.js");
@@ -95,6 +169,12 @@ var wordsStr = "";
 //recieve user number input
 var nums = process.argv[2];
 var valid = true;
+var engWords = [];
+const readline = require('readline');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 
 //call valid number before to exit if need be
@@ -109,7 +189,7 @@ fs.readFile(filePath, function(err, data) {
   }
   wordsStr = data.toString();
   const arr = words.seperateWordsIntoArray(wordsStr);
-  var engWords = words.statsCalc(arr);
+  engWords = words.statsCalc(arr);
 
   //replace each numbers with array of letters
   var myArr = [];
@@ -119,6 +199,7 @@ fs.readFile(filePath, function(err, data) {
   var combinations = allPossibleCombinations(myArr);
   var result = compareToEnglishWords(combinations, engWords);
   console.log("Possible words for the numbers", nums," are: ", result);
+  validOutput();
   //incorporate learning new words
 
 });
