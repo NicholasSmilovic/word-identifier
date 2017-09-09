@@ -22,7 +22,6 @@
 //return array of all possible combinations********************
 function allPossibleCombinations(arr) {
   //create array holding index counters
-  // console.log("allPossibleCombinations is given: ", arr)
   if (arr.lengh === 0) {
     return [];
   } else if (arr.length === 1) {
@@ -32,11 +31,9 @@ function allPossibleCombinations(arr) {
     var allCasesOfRest = allPossibleCombinations(arr.slice(1));
     for(var c in allCasesOfRest) {
       for (var i = 0; i < arr[0].length; i++) {
-        // console.log(arr[0][i] + " " + allCasesOfRest[c])
         result.push(arr[0][i] + allCasesOfRest[c]);
       }
     }
-    // console.log(result);
     return result;
   }
 }
@@ -100,6 +97,6 @@ fs.readFile(filePath, function(err, data) {
   }
   var combinations = allPossibleCombinations(myArr);
   var result = compareToEnglishWords(combinations, engWords);
-  console.log("possible words for the numbers", nums," are: ", result);
+  console.log("Possible words for the numbers", nums," are: ", result);
 
 });
