@@ -21,7 +21,6 @@
 
 //return array of all possible combinations********************
 function allPossibleCombinations(arr) {
-  //create array holding index counters
   if (arr.lengh === 0) {
     return [];
   } else if (arr.length === 1) {
@@ -61,6 +60,7 @@ function getLetters(number) {
     return "nope";
   }
 }
+
 //compare to database of english words
 function compareToEnglishWords(combinations, engWords) {
   var result = [];
@@ -75,12 +75,25 @@ function compareToEnglishWords(combinations, engWords) {
   }
   return result;
 }
+
+//check if number is valid ----->future work use the star key and pound key to create sentences.
+function validNumber{
+
+}
+
 //***************Start of function calls******************************//
+//.js file containing function for creating database of english words
 var words = require("./lib/word-stats.js");
 var fs = require("fs");
+//.txt file containing some english words
 var filePath = "./lib/words.txt";
 var wordsStr = "";
+//recieve user number input
 var nums = process.argv[2];
+
+
+//call valid number before to exit if need be
+//need validNumber();
 
 fs.readFile(filePath, function(err, data) {
   if (err) {
@@ -98,5 +111,6 @@ fs.readFile(filePath, function(err, data) {
   var combinations = allPossibleCombinations(myArr);
   var result = compareToEnglishWords(combinations, engWords);
   console.log("Possible words for the numbers", nums," are: ", result);
+  //incorporate learning new words
 
 });
