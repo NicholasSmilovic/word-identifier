@@ -93,8 +93,8 @@ function validOutput() {
         if (answer === "yes") {
           addWordToDatabase();
         } else if (answer === "no") {
-          rl.question("Is you output repeated? (yes/no): ", function(answer) {
-            if (answer === yes) {
+          rl.question("Is your output repeated? (yes/no): ", function(answer) {
+            if (answer === "yes") {
               deleteRepeatedWord();
             } else if (answer === "no") {
               console.log("I don't know then. Sorry!!");
@@ -122,16 +122,16 @@ function addWordToDatabase() {
     var exist = checkForWord(answer);
     if (exist < 0) {
       console.log("Invalid word. Please don't try to add invalid words to database.");
-      } else if (exist === 0) {
-        wordsStr = wordsStr + "\n" + answer;
-        fs.writeFile(filePath, wordsStr, function(err) {
-          if (err) {
-            throw err;
-          }
-        });
-      } else {
-        console.log("We already have this word, but thank you.");
-      }
+    } else if (exist === 0) {
+      wordsStr = wordsStr + "\n" + answer;
+      fs.writeFile(filePath, wordsStr, function(err) {
+        if (err) {
+          throw err;
+        }
+      });
+    } else {
+      console.log("We already have this word, but thank you.");
+    }
     rl.close();
   });
 }
@@ -148,15 +148,55 @@ function checkForWord(str) {
   for (var prop in engWords) {
     for(var word of engWords[prop]) {
       if (word === str) {
-      count++;
+        count++;
       }
     }
   }
-  console.log(count)
   return count;
 }
 
 function deleteRepeatedWord() {
+  rl.question("Please input your word in lowercase: ", function (answer) {
+    var exist = checkForWord(answer);
+    var count = 0;
+    var newWordLength = answer.length;
+    var tmpArr = [];
+    var str = "";
+    if (exist < 0) {
+      console.log("Invalid word. Carefully input words.");
+    } else if (exist === 0) {
+      console.log("We do not have that word");
+    } else {
+      console.log("You are right! Let me fix that!");
+      for(var word in engWords[newWordLength]){
+        // console.log(engWords[newWordLength][word]);
+        // console.log(answer);
+        // console.log(!(answer === engWords[newWordLength][word]));
+        if (!(answer === engWords[newWordLength][word])) {
+          tmpArr.push(engWords[newWordLength][word]);
+        } else if ( count === 1) {
+            console.log("found it at! ", word);
+        } else {
+          count = 1;
+          tmpArr.push(engWords[newWordLength][word])
+        }
+      }
+      engWords[newWordLength] = tmpArr;
+
+      for(var prop in engWords) {
+        for(var word of engWords[prop]){
+          str = str + word + "\n";
+        }
+      }
+      fs.writeFile(filePath, str, function(err) {
+        if (err) {
+          throw err;
+        }
+      });
+
+    }
+    rl.close();
+  });
 
 }
 //***************Start of function calls******************************//
