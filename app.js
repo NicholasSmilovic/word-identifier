@@ -77,8 +77,12 @@ function compareToEnglishWords(combinations, engWords) {
 }
 
 //check if number is valid ----->future work use the star key and pound key to create sentences.
-function validNumber(){
-
+function validNumber(nums){
+  for(var num in nums) {
+    if (num === "0" || num === "1") {
+      valid = false;
+    }
+  }
 }
 
 //***************Start of function calls******************************//
@@ -90,10 +94,14 @@ var filePath = "./lib/words.txt";
 var wordsStr = "";
 //recieve user number input
 var nums = process.argv[2];
+var valid = true;
 
 
 //call valid number before to exit if need be
-//need validNumber();
+if (!validNumber(nums)) {
+  console.log("Invalid number input!!!")
+  return;
+}
 
 fs.readFile(filePath, function(err, data) {
   if (err) {
