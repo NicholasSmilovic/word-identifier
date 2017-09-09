@@ -77,7 +77,7 @@ function compareToEnglishWords(combinations, engWords) {
 }
 
 //check if number is valid ----->future work use the star key and pound key to create sentences.
-function validNumber{
+function validNumber(){
 
 }
 
